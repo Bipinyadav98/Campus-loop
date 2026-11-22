@@ -19,7 +19,7 @@ function App() {
   const [college,setCollege]=useState(JSON.parse(localStorage.getItem('campusloop-college')||'null'));
   const [user,setUser]=useState(JSON.parse(localStorage.getItem('campusloop-user')||'null'));
   const [notice,setNotice]=useState('');
-  useEffect(()=>{api().get('/colleges').then(r=>{setColleges(r.data||[]);if(!college&&r.data?.length){setCollege(r.data[0]);localStorage.setItem('campusloop-college',JSON.stringify(r.data[0]));}}).catch(()=>setNotice('Cannot reach the API. Start the backend and refresh.'));},[]);
+  useEffect(()=>{api().get('/colleges').then(r=>{const list=r.data||[];setColleges(list);const saved=list.find(x=>x._id===college?._id);if(!saved&&list.length){setCollege(list[0]);localStorage.setItem('campusloop-college',JSON.stringify(list[0]));}else if(saved){setCollege(saved);}}).catch(()=>setNotice('Cannot reach the API. Start the backend and refresh.'));},[]);
   useEffect(()=>{if(token())api().get('/auth/me').then(r=>{setUser(r.data);localStorage.setItem('campusloop-user',JSON.stringify(r.data));}).catch(()=>{localStorage.removeItem('campusloop-token');localStorage.removeItem('campusloop-user');setUser(null);});},[]);
   const logout=()=>{localStorage.removeItem('campusloop-token');localStorage.removeItem('campusloop-user');setUser(null);setNotice('You have been logged out.');};
   const notify=m=>{setNotice(m);window.setTimeout(()=>setNotice(''),3500);};
