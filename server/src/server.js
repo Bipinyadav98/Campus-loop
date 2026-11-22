@@ -8,10 +8,11 @@ import requestRoutes from './routes/requests.js';
 import collegeRoutes from './routes/colleges.js';
 
 const app = express();
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173,http://localhost:5174')
-  .split(',')
-  .map(value => value.trim())
-  .filter(Boolean);
+const allowedOrigins = [...new Set([
+  'http://localhost:5173',
+  'http://localhost:5174',
+  ...(process.env.CLIENT_URL || '').split(',').map(value => value.trim()).filter(Boolean)
+])];
 
 app.use(cors({
   origin(origin, callback) {
