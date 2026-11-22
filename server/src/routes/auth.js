@@ -40,8 +40,9 @@ router.post('/register', async (req, res) => {
       semester: semester ? Number(semester) : undefined,
       verified: false
     });
+    await user.populate('college', 'name shortName city');
     const token = jwt.sign(
-      { id: user._id, role: user.role, college: user.college },
+      { id: user._id, role: user.role, college: user.college._id },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
