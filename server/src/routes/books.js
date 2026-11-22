@@ -8,7 +8,8 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const { college, semester, course, subject, q, mode } = req.query;
-    const filter = {};
+    if (!college) return res.status(400).json({ message: 'Select a college to browse its books.' });
+    const filter = { college, available: true };
     if (college) {
       if (!mongoose.isValidObjectId(college)) return res.status(400).json({ message: 'Invalid college.' });
       filter.college = college;
